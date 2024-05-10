@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import { HiEllipsisVertical, HiMiniBars3BottomRight } from "react-icons/hi2";
 import { Gifstate } from "../context/gif-context.jsx";
 import Category from "../pages/Category.jsx";
+import GifSearch from "./GifSearch.jsx";
 
 const Header = () => {
   const [categories, setCategories] = useState([]);
   const [showCategories, setShowCategories] = useState(false);
 
-  const { gf, filter, setFilter, favourites } = Gifstate();
+  const { gf, favourites } = Gifstate();
 
   const fetchCategories = async () => {
     try {
@@ -86,6 +87,9 @@ const Header = () => {
           </div>
         )}
       </div>
+
+      {/* Search */}
+      <GifSearch></GifSearch>
     </nav>
   );
 };
