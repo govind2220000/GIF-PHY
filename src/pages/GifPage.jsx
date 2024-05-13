@@ -13,13 +13,13 @@ import { FaPaperPlane } from "react-icons/fa6";
 import { IoCodeSharp } from "react-icons/io5";
 
 const GifPage = () => {
-  const contentType = ["gif", "stickers", "texts"];
+  const contentType = ["gifs", "stickers", "texts"];
   const { type, slug } = useParams();
   const [gif, setGif] = useState({});
   const [relatedGifs, setRelatedGifs] = useState([]);
   const [readMore, setReadMore] = useState(false);
 
-  const { gf, favourites } = Gifstate();
+  const { gf, favourites, addToFavorites } = Gifstate();
 
   const fetchGif = async () => {
     const gifId = slug.split("-");
@@ -64,10 +64,10 @@ const GifPage = () => {
             </div>
             {gif?.user?.description && (
               <p className="py-4 whitespace-pre-line text-sm text-gray-400">
-                {!readMore
-                  ? gif?.user?.description
-                  : gif?.user?.description.length < 100
-                  ? gif?.user?.description
+                {readMore
+                  ? gif?.user?.description.length < 100
+                    ? gif?.user?.description
+                    : gif?.user?.description
                   : gif?.user?.description.slice(0, 100) + "..."}{" "}
                 <div
                   className="flex items-center faded-text cursor-pointer"
