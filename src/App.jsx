@@ -17,20 +17,37 @@ import AppLayout from "./layout/AppLayout.jsx";
 import Home from "./pages/Home.jsx";
 import GifProvider from "./context/gif-context.jsx";
 import Login from "./pages/Login.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Register from "./pages/Register.jsx";
+import { onAuthStateChanged } from "firebase/auth";
+import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
+import { auth } from "./firebase/firebase.js";
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  //const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [user, setUser] = useState(null);
+  const [isfetching, setIsFetching] = useState(true);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+        setIsFetching(false);
+        return;
+      }
+      setUser(null);
+    });
+    return () => unsubscribe();
+  });
 
   const router = createBrowserRouter([
     {
-      element: <AppLayout></AppLayout>,
+      element: <AppLayout user={user}></AppLayout>,
 
       children: [
         {
           path: "/",
-          element: isLoggedIn ? <Home /> : <Navigate to="/login" />,
+          element: <Home />,
         },
         {
           path: "/:category",
@@ -54,11 +71,19 @@ export default function App() {
         },
         {
           path: "/favourites",
-          element: <Favourites></Favourites>,
+          element: (
+            <ProtectedRoute user={user}>
+              <Favourites user={user}></Favourites>
+            </ProtectedRoute>
+          ),
         },
       ],
     },
   ]);
+
+  if (isfetching) {
+    return <h2>Loading....</h2>;
+  }
   return (
     <GifProvider>
       <RouterProvider router={router}></RouterProvider>

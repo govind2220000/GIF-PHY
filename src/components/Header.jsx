@@ -4,8 +4,10 @@ import { HiEllipsisVertical, HiMiniBars3BottomRight } from "react-icons/hi2";
 import { Gifstate } from "../context/gif-context.jsx";
 import Category from "../pages/Category.jsx";
 import GifSearch from "./GifSearch.jsx";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase/firebase.js";
 
-const Header = () => {
+const Header = ({ user }) => {
   const [categories, setCategories] = useState([]);
   const [showCategories, setShowCategories] = useState(false);
 
@@ -20,6 +22,12 @@ const Header = () => {
     }
   };
 
+  const handleSignout = () => {
+    signOut(auth)
+      .then(() => console.log("Signout"))
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -31,6 +39,7 @@ const Header = () => {
           <h1 className="text-5xl font-bold tracking-tight cursor-pointer">
             GIPHY
           </h1>
+          <h2>{user.displayName}</h2>
         </Link>
         <div className="font-bold text-md flex gap-2 items-center">
           {/* rendering categories */}

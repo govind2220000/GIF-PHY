@@ -9,8 +9,9 @@
 import { useEffect, useState } from "react";
 import Gif from "../components/Gif.jsx";
 import { Gifstate } from "../context/gif-context.jsx";
+import { Navigate } from "react-router-dom";
 
-const Favourites = () => {
+const Favourites = ({ user }) => {
   const { gf, favourites } = Gifstate();
   const [favoriteGIFs, setFavoriteGIFs] = useState([]);
 
@@ -22,7 +23,9 @@ const Favourites = () => {
   useEffect(() => {
     fetchFavoriteGIFs();
   }, []);
-
+  if (!user) {
+    return <Navigate to="/login"></Navigate>;
+  }
   return (
     <div className="mt-2">
       <span className="faded-text ">My Favorites</span>

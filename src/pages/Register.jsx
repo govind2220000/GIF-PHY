@@ -1,8 +1,43 @@
-import React from "react";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase/firebase.js";
 
 const Register = () => {
   const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignup = () => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        return updateProfile(user, {
+          displayName: name,
+        });
+      })
+      .then(() => {
+        const user = auth.currentUser;
+        console.log(user); // Now 'user' is not undefined
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message; // Use 'message', not 'errorMessage'
+        console.log(errorCode, errorMessage);
+      });
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
   return (
     <div className="min-h-screen flex items-center justify-center  py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -24,6 +59,7 @@ const Register = () => {
                 type="text"
                 autoComplete="text"
                 required
+                onChange={handleNameChange}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Please enter your name"
               />
@@ -38,6 +74,7 @@ const Register = () => {
                 type="email"
                 autoComplete="email"
                 required
+                onChange={handleEmailChange}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
               />
@@ -52,6 +89,7 @@ const Register = () => {
                 type="password"
                 autoComplete="current-password"
                 required
+                onChange={handlePasswordChange}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
@@ -60,7 +98,8 @@ const Register = () => {
 
           <div>
             <button
-              type="submit"
+              type="button"
+              onClick={handleSignup}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Register
