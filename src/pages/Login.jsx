@@ -13,6 +13,9 @@ const Login = () => {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user);
+        setEmail("");
+
+        setPassword("");
         navigate("/");
       })
       .catch((error) => {

@@ -36,10 +36,9 @@ const Header = ({ user }) => {
       <div className="relative flex gap-4 justify-between items-center mb-2 ">
         <Link to="/" className="flex gap-2">
           <img src="./logo.svg" className="w-8" alt="GIPHY Logo"></img>
-          <h1 className="text-5xl font-bold tracking-tight cursor-pointer">
+          <h1 className="sm:text-lg   md:text-5xl font-bold tracking-tight cursor-pointer">
             GIPHY
           </h1>
-          <h2>{user.displayName}</h2>
         </Link>
         <div className="font-bold text-md flex gap-2 items-center">
           {/* rendering categories */}
@@ -62,17 +61,23 @@ const Header = ({ user }) => {
               } border-b-4 hidden lg:block`}
             ></HiEllipsisVertical>
           </button>
-
+          <button onClick={() => setShowCategories(!showCategories)}>
+            <HiMiniBars3BottomRight
+              size={30}
+              className="text-sky-400 block mx-2 lg:hidden"
+            ></HiMiniBars3BottomRight>
+          </button>
           {favourites.length > 0 && (
-            <div className="h-9 bg-gray-900 pt-1.5 px-5 cursor-pointer rounded">
+            <div className="sm:h-14 md:h-9 bg-gray-900 pt-1.5 px-5 cursor-pointer rounded text-wrap">
               <Link to="/favourites">Favourite GIF</Link>
             </div>
           )}
-          <button>
-            <HiMiniBars3BottomRight
-              size={30}
-              className="text-sky-400 block lg:hidden"
-            ></HiMiniBars3BottomRight>
+
+          <button
+            onClick={handleSignout}
+            className="sm:pt-0.5 h-14 md:h-9 bg-gray-900 pt-1.5 px-5 cursor-pointer rounded"
+          >
+            Signout
           </button>
         </div>
 

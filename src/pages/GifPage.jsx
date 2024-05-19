@@ -11,6 +11,13 @@ import FollowOn from "../components/FollowOn.jsx";
 import { HiOutlineExternalLink } from "react-icons/hi";
 import { FaPaperPlane } from "react-icons/fa6";
 import { IoCodeSharp } from "react-icons/io5";
+import {
+  FacebookIcon,
+  FacebookMessengerIcon,
+  FacebookShareButton,
+  TelegramIcon,
+  TelegramShareButton,
+} from "react-share";
 
 const GifPage = () => {
   const contentType = ["gifs", "stickers", "texts"];
@@ -118,44 +125,60 @@ const GifPage = () => {
                 alt={gif?.user?.display_name}
                 className="h-14"
               />
-              <div className="px-2">
-                <div className="font-bold">{gif?.user?.display_name}</div>
+              <div className="px-2 mr-2">
+                <div className="font-bold">{gif?.user?.display_name}123</div>
                 <div className="faded-text">@{gif?.user?.username}</div>
               </div>
 
-              <button className="ml-auto" onClick={shareGif}>
-                <FaPaperPlane size={25} />
+              <button onClick={() => addToFavorites(gif.id)} className="mx-3">
+                <HiMiniHeart
+                  size={30}
+                  className={`${
+                    favourites.includes(gif.id) ? "text-red-500" : ""
+                  }`}
+                />
               </button>
+              <TelegramShareButton
+                url={gif?.images?.fixed_width?.webp}
+                className="mx-3"
+              >
+                <TelegramIcon size={25}></TelegramIcon>
+              </TelegramShareButton>
+
+              <FacebookShareButton
+                url={gif?.images?.fixed_width?.webp}
+                className="mx-3"
+              >
+                <FacebookIcon size={25}></FacebookIcon>
+              </FacebookShareButton>
             </div>
             {/* {mobileUI} */}
           </div>
           <div className="hidden sm:flex flex-col gap-5 mt-6">
             <button
               onClick={() => addToFavorites(gif.id)}
-              className="flex gap-5 items-center font-bold text-lg"
+              className="flex gap-5 items-center"
             >
               <HiMiniHeart
-                size={30}
+                size={26}
                 className={`${
                   favourites.includes(gif.id) ? "text-red-500" : ""
                 }`}
               />
-              Favorite
             </button>
-            <button
-              onClick={shareGif} // Assignment
-              className="flex gap-6 items-center font-bold text-lg"
+            <TelegramShareButton
+              url={gif?.images?.fixed_width?.webp}
+              className="mx-1 "
             >
-              <FaPaperPlane size={25} />
-              Share
-            </button>
-            <button
-              onClick={EmbedGif} // Assignment
-              className="flex gap-5 items-center font-bold text-lg"
+              <FaPaperPlane size={20}></FaPaperPlane>
+            </TelegramShareButton>
+
+            <FacebookShareButton
+              url={gif?.images?.fixed_width?.webp}
+              className="mx-1 mt-1"
             >
-              <IoCodeSharp size={30} />
-              Embed
-            </button>
+              <FacebookMessengerIcon size={25}></FacebookMessengerIcon>
+            </FacebookShareButton>
           </div>
         </div>
         <div>

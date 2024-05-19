@@ -4,11 +4,7 @@
 //single gif
 //favourites
 
-import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Category from "./pages/Category.jsx";
 import SearchPage from "./pages/SearchPage.jsx";
 import GifPage from "./pages/GifPage.jsx";
@@ -25,19 +21,25 @@ import { auth } from "./firebase/firebase.js";
 
 export default function App() {
   //const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   const [user, setUser] = useState(null);
   const [isfetching, setIsFetching] = useState(true);
+  console.log(isfetching);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log(user);
       if (user) {
         setUser(user);
         setIsFetching(false);
+        console.log("user Exists");
         return;
       }
+      setIsFetching(false);
       setUser(null);
     });
-    return () => unsubscribe();
+    return () => {
+      console.log("Checking for mounting/unmounting");
+      unsubscribe();
+    };
   });
 
   const router = createBrowserRouter([
@@ -47,27 +49,39 @@ export default function App() {
       children: [
         {
           path: "/",
-          element: <Home />,
+          element: user ? <Home /> : <Login></Login>,
         },
         {
           path: "/:category",
-          element: <Category></Category>,
+          element: (
+            <ProtectedRoute user={user}>
+              <Category></Category>
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/login",
-          element: <Login></Login>,
+          element: user ? <Home /> : <Login></Login>,
         },
         {
           path: "/register",
-          element: <Register></Register>,
+          element: user ? <Home /> : <Register></Register>,
         },
         {
           path: "/search/:query",
-          element: <SearchPage></SearchPage>,
+          element: (
+            <ProtectedRoute user={user}>
+              <SearchPage></SearchPage>
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/:type/:slug",
-          element: <GifPage></GifPage>,
+          element: (
+            <ProtectedRoute user={user}>
+              <GifPage></GifPage>
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/favourites",
@@ -80,13 +94,15 @@ export default function App() {
       ],
     },
   ]);
-
+  console.log("Useeffect test");
   if (isfetching) {
     return <h2>Loading....</h2>;
   }
   return (
     <GifProvider>
-      <RouterProvider router={router}></RouterProvider>
+      <RouterProvider router={router}>
+        {user ? <AppLayout user={user} /> : <Login></Login>}
+      </RouterProvider>
     </GifProvider>
   );
 }

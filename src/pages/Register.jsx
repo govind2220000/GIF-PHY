@@ -21,6 +21,9 @@ const Register = () => {
       .then(() => {
         const user = auth.currentUser;
         console.log(user); // Now 'user' is not undefined
+        setEmail("");
+        setName("");
+        setPassword("");
       })
       .catch((error) => {
         const errorCode = error.code;
