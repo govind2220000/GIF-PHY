@@ -6,6 +6,7 @@ import Category from "../pages/Category.jsx";
 import GifSearch from "./GifSearch.jsx";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase/firebase.js";
+import { Bounce, toast } from "react-toastify";
 
 const Header = ({ user }) => {
   const [categories, setCategories] = useState([]);
@@ -24,8 +25,34 @@ const Header = ({ user }) => {
 
   const handleSignout = () => {
     signOut(auth)
-      .then(() => console.log("Signout"))
-      .catch((err) => console.log(err));
+      .then(() => {
+        console.log("Signout");
+        toast.success(`Signed Out succesfully`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(`Registration Failed ${errorCode}`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      });
   };
 
   useEffect(() => {
@@ -89,6 +116,7 @@ const Header = ({ user }) => {
               {categories?.map((category) => {
                 return (
                   <Link
+                    onClick={() => setShowCategories(!showCategories)}
                     key={category.name}
                     to={`/${category.name_encoded}`}
                     className="font-bold"

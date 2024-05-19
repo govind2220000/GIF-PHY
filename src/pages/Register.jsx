@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebase.js";
+import { Bounce, toast } from "react-toastify";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const Register = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        console.log(user);
         return updateProfile(user, {
           displayName: name,
         });
@@ -21,6 +23,17 @@ const Register = () => {
       .then(() => {
         const user = auth.currentUser;
         console.log(user); // Now 'user' is not undefined
+        toast.success(`You have been registered succesfully`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
         setEmail("");
         setName("");
         setPassword("");
@@ -29,6 +42,17 @@ const Register = () => {
         const errorCode = error.code;
         const errorMessage = error.message; // Use 'message', not 'errorMessage'
         console.log(errorCode, errorMessage);
+        toast.error(`Registration Failed ${errorCode}`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
       });
   };
 

@@ -18,6 +18,7 @@ import Register from "./pages/Register.jsx";
 import { onAuthStateChanged } from "firebase/auth";
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 import { auth } from "./firebase/firebase.js";
+import { ToastContainer } from "react-toastify";
 
 export default function App() {
   //const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -99,10 +100,13 @@ export default function App() {
     return <h2>Loading....</h2>;
   }
   return (
-    <GifProvider>
-      <RouterProvider router={router}>
-        {user ? <AppLayout user={user} /> : <Login></Login>}
-      </RouterProvider>
-    </GifProvider>
+    <>
+      <ToastContainer />
+      <GifProvider>
+        <RouterProvider router={router}>
+          {user ? <AppLayout user={user} /> : <Login></Login>}
+        </RouterProvider>
+      </GifProvider>
+    </>
   );
 }
